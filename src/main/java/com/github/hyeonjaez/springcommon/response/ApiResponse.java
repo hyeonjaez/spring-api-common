@@ -1,6 +1,7 @@
 package com.github.hyeonjaez.springcommon.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.hyeonjaez.springcommon.util.ObjectsUtil;
 
 /**
  * 공통 API 응답 구조를 정의하는 제네릭 클래스입니다.
@@ -43,6 +44,16 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
+    private ApiResponse(Builder<T> builder) {
+        this.status = builder.status;
+        this.message = builder.message;
+        this.data = builder.data;
+    }
+
+    public static <T> Builder<T> builder() {
+        return new Builder<>();
+    }
+
     public ApiStatus getStatus() {
         return status;
     }
@@ -53,5 +64,37 @@ public class ApiResponse<T> {
 
     public T getData() {
         return data;
+    }
+
+
+    public static class Builder<T> {
+        private ApiStatus status = ApiStatus.SUCCESS;
+        private String message = "요청이 처리되었습니다.";
+        private T data;
+
+        public Builder<T> status(ApiStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder<T> message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public Builder<T> data(T data) {
+            this.data = data;
+            return this;
+        }
+
+        public ApiResponse<T> build() {
+            if (ObjectsUtil.isNull(this.data)) {
+                data = (T) EmptyResponse.getInstance();
+            }
+
+            return new ApiResponse<>(this);
+        }
+
+
     }
 }
