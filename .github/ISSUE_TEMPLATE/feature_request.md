@@ -1,0 +1,27 @@
+---
+name: feature_request
+about: Describe this issue template's purpose here.
+title: ''
+labels: "\U0001F680 feature"
+assignees: ''
+
+---
+
+name: 🚀 기능 요청
+description: 새로운 기능을 제안하거나 개선사항을 공유해주세요.
+labels: enhancement
+
+---
+
+## 📌 기능 설명
+어떤 기능을 추가하거나 개선하고 싶은가요?
+
+> 예: 사용자가 프로필 이미지를 업로드할 수 있도록 합니다.
+
+## ✅ 기대 동작
+이 기능이 어떻게 동작하길 기대하나요?
+
+> 예: 마이페이지에서 이미지 업로드 후, 프로필 사진이 변경되어야 합니다.
+
+## 📎 추가 정보
+참고할 만한 자료나 이미지, 링크가 있다면 첨부해주세요.
