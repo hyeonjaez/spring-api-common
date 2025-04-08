@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
  *
  * <p>구현체는 HTTP 상태 코드, 에러 코드 문자열, 사용자에게 전달할 메시지를 포함해야 하며,
  * {@link com.github.hyeonjaez.springcommon.handler.ErrorResponse} 또는
- * {@link com.github.hyeonjaez.springcommon.exception.CustomException}과 함께 사용되어
+ * {@link BusinessException}과 함께 사용되어
  * 일관된 예외 응답 구조를 구성합니다.</p>
  *
  * <p>라이브러리 또는 도메인 별로 다양한 {@code ErrorCode} 구현체를 정의하여 사용할 수 있습니다.</p>
