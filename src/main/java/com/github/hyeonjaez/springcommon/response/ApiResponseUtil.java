@@ -29,7 +29,7 @@ import org.springframework.http.ResponseEntity;
  * @see ApiStatus
  * @since 1.0.0
  */
-public final class ApiResponseEntityBuilder {
+public class ApiResponseUtil {
     public static final String DEFAULT_MESSAGE = "요청이 처리되었습니다.";
     public static final String DEFAULT_OK_MESSAGE = "요청이 성공적으로 처리되었습니다.";
     public static final String DEFAULT_CREATED_MESSAGE = "리소스가 성공적으로 생성되었습니다.";
@@ -162,7 +162,7 @@ public final class ApiResponseEntityBuilder {
     /**
      * 유틸리티 클래스이므로 인스턴스화를 방지합니다.
      */
-    private ApiResponseEntityBuilder() {
+    private ApiResponseUtil() {
         throw new UnsupportedOperationException("Utility Class");
     }
 }
