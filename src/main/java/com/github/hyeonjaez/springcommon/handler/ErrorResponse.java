@@ -1,6 +1,7 @@
 package com.github.hyeonjaez.springcommon.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.hyeonjaez.springcommon.exception.BusinessException;
 import com.github.hyeonjaez.springcommon.exception.ErrorCode;
 import com.github.hyeonjaez.springcommon.response.ApiStatus;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import org.springframework.http.ResponseEntity;
  * </p>
  *
  * @author fiat_lux
- * @see com.github.hyeonjaez.springcommon.exception.CustomException
+ * @see BusinessException
  * @see com.github.hyeonjaez.springcommon.handler.GlobalExceptionHandler
  * @since 1.0.0
  */
@@ -89,7 +90,7 @@ public class ErrorResponse {
      * @param errorCode 에러 코드 객체
      * @return 에러 응답 본문을 포함한 ResponseEntity 객체
      */
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponse> toErrorResponseEntity(ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(of(errorCode));
@@ -102,7 +103,7 @@ public class ErrorResponse {
      * @param customMessage 사용자 정의 에러 메시지
      * @return 에러 응답 본문을 포함한 ResponseEntity 객체
      */
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode, String customMessage) {
+    public static ResponseEntity<ErrorResponse> toErrorResponseEntity(ErrorCode errorCode, String customMessage) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(of(errorCode, customMessage));
