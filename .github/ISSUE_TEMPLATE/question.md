@@ -1,6 +1,6 @@
 ---
 name: question
-about: Describe this issue template's purpose here.
+about: 그 외 질문이나 의견이 있다면 작성해주세요.
 title: ''
 labels: "❓ question"
 assignees: ''

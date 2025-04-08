@@ -1,6 +1,6 @@
 ---
 name: feature_request
-about: Describe this issue template's purpose here.
+about: 새로운 기능을 제안하거나 개선사항을 공유해주세요.
 title: ''
 labels: "\U0001F680 feature"
 assignees: ''

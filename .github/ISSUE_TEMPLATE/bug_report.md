@@ -1,6 +1,6 @@
 ---
 name: bug_report
-about: Describe this issue template's purpose here.
+about: 발생한 버그를 보고해주세요.
 title: ''
 labels: "\U0001F41E bug"
 assignees: ''
