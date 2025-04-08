@@ -1,7 +1,7 @@
 package com.github.hyeonjaez.springcommon.exception;
 
 /**
- * {@code CustomException}은 애플리케이션 내에서 발생하는 비즈니스 예외를 나타냅니다.
+ * {@code BusinessException}은 애플리케이션 내에서 발생하는 비즈니스 예외를 나타냅니다.
  *
  * <p>이 클래스는 {@link ErrorCode} 인터페이스를 통해 에러 상태 코드, 에러 코드 문자열, 에러 메시지를 캡슐화하여
  * 예외 처리 시 일관된 응답을 생성할 수 있도록 도와줍니다.</p>
@@ -18,10 +18,10 @@ package com.github.hyeonjaez.springcommon.exception;
  * @author fiat_lux
  * @since 1.0.0
  */
-public class CustomException extends RuntimeException {
+public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public CustomException(ErrorCode errorCode) {
+    public BusinessException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
