@@ -1,7 +1,7 @@
 package com.github.hyeonjaez.springcommon.util;
 
 import com.github.hyeonjaez.springcommon.exception.CommonErrorCode;
-import com.github.hyeonjaez.springcommon.exception.CustomException;
+import com.github.hyeonjaez.springcommon.exception.BusinessException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.Objects;
  * <p>
  * 이 클래스는 null 검증과 함께 ID 값이 유효한지 검사하는 공통 로직을 제공하며,
  * {@code Integer}와 {@code Long} 타입의 ID 값이 {@code null}이거나 0 이하일 경우
- * {@link CustomException}을 발생시킵니다.
+ * {@link BusinessException}을 발생시킵니다.
  * </p>
  *
  * <p>
@@ -36,20 +36,20 @@ public final class ObjectsUtil {
      *
      * @param object 검사할 객체
      * @param <T>    객체 타입
-     * @throws CustomException {@link CommonErrorCode#PARAMETER_NULL} 예외 발생
+     * @throws BusinessException {@link CommonErrorCode#PARAMETER_NULL} 예외 발생
      */
     public static <T> void checkNotNull(T object) {
         if (isNull(object)) {
-            throw new CustomException(CommonErrorCode.PARAMETER_NULL);
+            throw new BusinessException(CommonErrorCode.PARAMETER_NULL);
         }
     }
 
     /**
      * 전달된 모든 객체가 {@code null}이 아닌지 검사합니다.
-     * 하나라도 {@code null}이면 {@link CustomException}이 발생합니다.
+     * 하나라도 {@code null}이면 {@link BusinessException}이 발생합니다.
      *
      * @param objects 검사할 객체 목록
-     * @throws CustomException {@link CommonErrorCode#PARAMETER_NULL} 예외 발생
+     * @throws BusinessException {@link CommonErrorCode#PARAMETER_NULL} 예외 발생
      */
     public static void checkAllNotNull(Object... objects) {
         Arrays.stream(objects)
@@ -74,7 +74,7 @@ public final class ObjectsUtil {
      * 모든 {@code Integer} ID가 {@code null}이 아니고 0보다 큰지 검사합니다.
      *
      * @param ids 검사할 Integer ID 목록
-     * @throws CustomException {@link CommonErrorCode#PARAMETER_NULL}, {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
+     * @throws BusinessException {@link CommonErrorCode#PARAMETER_NULL}, {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
      */
     public static void checkIdIntegers(Integer... ids) {
         Arrays.stream(ids).forEach(ObjectsUtil::checkIdIntegerValid);
@@ -84,7 +84,7 @@ public final class ObjectsUtil {
      * 모든 {@code Long} ID가 {@code null}이 아니고 0보다 큰지 검사합니다.
      *
      * @param ids 검사할 Long ID 목록
-     * @throws CustomException {@link CommonErrorCode#PARAMETER_NULL}, {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
+     * @throws BusinessException {@link CommonErrorCode#PARAMETER_NULL}, {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
      */
     public static void checkIdLongs(Long... ids) {
         Arrays.stream(ids).forEach(ObjectsUtil::checkIdLongValid);
@@ -94,12 +94,12 @@ public final class ObjectsUtil {
      * 단일 {@code Integer} ID가 {@code null}이 아니고 0보다 큰지 검증합니다.
      *
      * @param id 검사할 Integer ID
-     * @throws CustomException {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
+     * @throws BusinessException {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
      */
     public static void checkIdIntegerValid(Integer id) {
         checkNotNull(id);
         if (id <= 0) {
-            throw new CustomException(CommonErrorCode.PARAMETER_ID_VALUE);
+            throw new BusinessException(CommonErrorCode.PARAMETER_ID_VALUE);
         }
     }
 
@@ -107,12 +107,12 @@ public final class ObjectsUtil {
      * 단일 {@code Long} ID가 {@code null}이 아니고 0보다 큰지 검증합니다.
      *
      * @param id 검사할 Long ID
-     * @throws CustomException {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
+     * @throws BusinessException {@link CommonErrorCode#PARAMETER_ID_VALUE} 예외 발생
      */
     public static void checkIdLongValid(Long id) {
         checkNotNull(id);
         if (id <= 0) {
-            throw new CustomException(CommonErrorCode.PARAMETER_ID_VALUE);
+            throw new BusinessException(CommonErrorCode.PARAMETER_ID_VALUE);
         }
     }
 
