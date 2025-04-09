@@ -219,7 +219,7 @@ class ApiResponseUtilTest {
         Throwable exceptionCause = exception.getCause();
         assertNotNull(exceptionCause);
         assertInstanceOf(UnsupportedOperationException.class, exceptionCause);
-        assertEquals("Utility Class", exceptionCause.getMessage());
+        assertEquals("Utility class cannot be instantiated.", exceptionCause.getMessage());
     }
 
 }
