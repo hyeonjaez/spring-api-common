@@ -5,30 +5,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * 공통 예외 처리의 기본 구현을 제공하는 추상 클래스입니다.
+ * Provides a base implementation for handling domain-specific business exceptions.
+ *
  * <p>
- * 사용자는 이 클래스를 상속받아 필요한 예외 핸들러만 추가하면 됩니다.
+ * This abstract class defines a default handler for {@link BusinessException}.
+ * Users can extend this class to add additional exception handlers
+ * specific to their application needs.
+ * </p>
+ *
+ * <p>
+ * When used with {@code @RestControllerAdvice}, it enables global exception handling
+ * across the application.
  * </p>
  *
  * <pre>{@code
  * @RestControllerAdvice
  * public class MyExceptionHandler extends GlobalExceptionHandler {
- *     // 필요한 예외만 추가로 핸들링
+ *     // Add custom exception handlers if necessary
  * }
  * }</pre>
  *
  * @author fiat_lux
- * @see com.github.hyeonjaez.springcommon.handler.ErrorResponse
- * @see com.github.hyeonjaez.springcommon.exception.ErrorCode
+ * @see ErrorResponse
+ * @see BusinessException
  * @since 0.0.1
  */
 public abstract class GlobalExceptionHandler {
 
     /**
-     * 도메인 비즈니스 예외를 처리합니다.
+     * Handles domain-specific business exceptions.
      *
-     * @param exception {@link BusinessException}
-     * @return 에러 응답 ResponseEntity
+     * @param exception the {@link BusinessException} instance
+     * @return a {@link ResponseEntity} containing the standardized error response
      */
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException exception) {
