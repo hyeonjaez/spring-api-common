@@ -1,43 +1,53 @@
 package com.github.hyeonjaez.springcommon.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.hyeonjaez.springcommon.util.ObjectsUtil;
 
 /**
- * 공통 API 응답 구조를 정의하는 제네릭 클래스입니다.
+ * Defines a common API response structure using generics.
  *
  * <p>
- * 모든 API 응답은 이 클래스를 통해 감싸져 클라이언트에게 전달됩니다.
- * 응답은 세 가지 주요 필드로 구성됩니다:
- * <ul>
- *     <li>{@code status} - 응답의 처리 상태 ({@link ApiStatus})</li>
- *     <li>{@code message} - 사용자에게 전달할 설명 메시지</li>
- *     <li>{@code data} - 실제 응답 데이터</li>
- * </ul>
+ * All API responses are wrapped in this class and returned to the client
+ * with a consistent format including status, message, and data fields.
  * </p>
  *
  * <p>
- * {@code @JsonInclude(JsonInclude.Include.NON_NULL)} 설정으로 인해,
- * 필드가 {@code null}일 경우 JSON 응답에서 제외되어 불필요한 데이터 전송을 방지합니다.
+ * This class does not rely on any specific JSON library.
+ * If you want to exclude {@code null} fields from the JSON output,
+ * configure your JSON serializer (e.g., Jackson) accordingly.
  * </p>
  *
  * <pre>{@code
- * // 사용 예시
- * ApiResponse<UserDto> response = new ApiResponse<>(ApiStatus.SUCCESS, "요청 성공", userDto);
+ * ApiResponse<UserDto> response = new ApiResponse<>(ApiStatus.SUCCESS, "Request successful", userDto);
  * }</pre>
  *
- * @param <T> 응답 데이터의 타입
+ * @param <T> the type of the response body
  * @author fiat_lux
  * @see ApiStatus
- * @since 1.0.0
+ * @since 0.0.1
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
-
+    /**
+     * Indicates the processing status of the API response (e.g., SUCCESS, FAILURE, ERROR).
+     */
     private final ApiStatus status;
+
+    /**
+     * A human-readable message intended for the end user or client developer.
+     */
     private final String message;
+
+    /**
+     * The actual data returned in the response. This could be any type.
+     */
     private final T data;
 
+    /**
+     * Constructs an ApiResponse with the provided status, message, and data.
+     *
+     * @param status  the response status
+     * @param message a descriptive message
+     * @param data    the actual response payload
+     */
     public ApiResponse(ApiStatus status, String message, T data) {
         this.status = status;
         this.message = message;
@@ -66,27 +76,67 @@ public class ApiResponse<T> {
         return data;
     }
 
-
+    /**
+     * Builder class for constructing {@link ApiResponse} instances in a fluent manner.
+     *
+     * @param <T> the type of data in the response
+     */
     public static class Builder<T> {
+
+        /**
+         * The response status. Defaults to {@code ApiStatus.SUCCESS}.
+         */
         private ApiStatus status = ApiStatus.SUCCESS;
+
+        /**
+         * The response message. Defaults to a generic success message.
+         */
         private String message = "요청이 처리되었습니다.";
+
+        /**
+         * The actual payload to be included in the response.
+         */
         private T data;
 
+        /**
+         * Sets the response status.
+         *
+         * @param status the API status
+         * @return the builder instance
+         */
         public Builder<T> status(ApiStatus status) {
             this.status = status;
             return this;
         }
 
+        /**
+         * Sets the response message.
+         *
+         * @param message the message to be included
+         * @return the builder instance
+         */
         public Builder<T> message(String message) {
             this.message = message;
             return this;
         }
 
+        /**
+         * Sets the response data.
+         *
+         * @param data the data payload
+         * @return the builder instance
+         */
         public Builder<T> data(T data) {
             this.data = data;
             return this;
         }
 
+        /**
+         * Builds and returns the final {@link ApiResponse} instance.
+         * If data is {@code null}, it will be replaced with an instance of {@link EmptyResponse}.
+         *
+         * @return a fully constructed ApiResponse
+         */
         public ApiResponse<T> build() {
             if (ObjectsUtil.isNull(this.data)) {
                 data = (T) EmptyResponse.getInstance();
