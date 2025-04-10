@@ -1,7 +1,7 @@
 package com.github.hyeonjaez.springcommon.util;
 
 import com.github.hyeonjaez.springcommon.exception.CommonErrorCode;
-import com.github.hyeonjaez.springcommon.exception.CustomException;
+import com.github.hyeonjaez.springcommon.exception.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,14 +26,14 @@ class ObjectsUtilTest {
     @Test
     @DisplayName("checkAllNotNull - 하나라도 null -> CustomException 발생 및 CommonErrorCode.PARAMETER_NULL")
     void testCheckAllNotNullFail() {
-        CustomException resultException = assertThrows(CustomException.class, () -> ObjectsUtil.checkAllNotNull("abc", new Object(), null));
+        BusinessException resultException = assertThrows(BusinessException.class, () -> ObjectsUtil.checkAllNotNull("abc", new Object(), null));
         assertEquals(CommonErrorCode.PARAMETER_NULL, resultException.getErrorCode());
     }
 
     @Test
     @DisplayName("checkNotNull - null 이면 -> CustomException 발생 및 CommonErrorCode.PARAMETER_NULL")
     void testCheckNotNullFail() {
-        CustomException resultException = assertThrows(CustomException.class, () -> ObjectsUtil.checkNotNull(null));
+        BusinessException resultException = assertThrows(BusinessException.class, () -> ObjectsUtil.checkNotNull(null));
         assertEquals(CommonErrorCode.PARAMETER_NULL, resultException.getErrorCode());
     }
 
@@ -70,7 +70,7 @@ class ObjectsUtilTest {
     @Test
     @DisplayName("checkIdIntegers - null 포함 시 예외")
     void testCheckIdIntegersNull() {
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> ObjectsUtil.checkIdIntegers(1, null));
         assertEquals(CommonErrorCode.PARAMETER_NULL, exception.getErrorCode());
     }
@@ -78,7 +78,7 @@ class ObjectsUtilTest {
     @Test
     @DisplayName("checkIdIntegers - 0 이하 값 포함 시 예외")
     void testCheckIdIntegersInvalid() {
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> ObjectsUtil.checkIdIntegers(0, 10));
         assertEquals(CommonErrorCode.PARAMETER_ID_VALUE, exception.getErrorCode());
     }
@@ -92,7 +92,7 @@ class ObjectsUtilTest {
     @Test
     @DisplayName("checkIdLongs - null 포함 시 예외")
     void testCheckIdLongsNull() {
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> ObjectsUtil.checkIdLongs(null, 10L));
         assertEquals(CommonErrorCode.PARAMETER_NULL, exception.getErrorCode());
     }
@@ -100,7 +100,7 @@ class ObjectsUtilTest {
     @Test
     @DisplayName("checkIdLongs - 0 이하 값 포함 시 예외")
     void testCheckIdLongsInvalid() {
-        CustomException exception = assertThrows(CustomException.class,
+        BusinessException exception = assertThrows(BusinessException.class,
                 () -> ObjectsUtil.checkIdLongs(-1L));
         assertEquals(CommonErrorCode.PARAMETER_ID_VALUE, exception.getErrorCode());
     }

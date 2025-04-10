@@ -1,54 +1,65 @@
 package com.github.hyeonjaez.springcommon.handler;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.hyeonjaez.springcommon.exception.BusinessException;
 import com.github.hyeonjaez.springcommon.exception.ErrorCode;
 import com.github.hyeonjaez.springcommon.response.ApiStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * 에러 응답 본문 구조를 정의한 클래스입니다.
+ * Represents the standardized structure for error responses.
  *
  * <p>
- * {@link ErrorCode} 인터페이스를 구현한 클래스에서 전달된 정보를 바탕으로,
- * 에러 상태, HTTP 상태 코드, 에러 코드, 메시지를 포함하는 응답 객체를 생성합니다.
+ * This class is used to build error responses containing API status,
+ * HTTP status code, error code, and a message. It is typically constructed
+ * using implementations of the {@link ErrorCode} interface.
  * </p>
  *
  * <p>
- * {@code @RestControllerAdvice}에서 예외 처리 시 {@link ResponseEntity}로 반환할 수 있도록
- * 다양한 정적 팩토리 메서드를 제공합니다.
+ * The static factory methods {@code of()} and {@code toErrorResponseEntity()}
+ * allow easy construction and wrapping of the error response in a {@link ResponseEntity}.
+ * </p>
+ *
+ * <p>
+ * This class is commonly used in {@code @RestControllerAdvice}-annotated exception handlers
+ * to produce consistent API error responses.
+ * </p>
+ *
+ * <p>
+ * This class does not depend on any JSON library.
+ * If you want to exclude {@code null} fields in the response,
+ * configure your serializer (e.g., Jackson) to do so.
  * </p>
  *
  * @author fiat_lux
- * @see com.github.hyeonjaez.springcommon.exception.CustomException
+ * @see BusinessException
  * @see com.github.hyeonjaez.springcommon.handler.GlobalExceptionHandler
- * @since 1.0.0
+ * @since 0.0.1
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
     /**
-     * API 응답 상태를 나타냅니다. (예: FAILURE, ERROR)
+     * The status of the API response (e.g., FAILURE or ERROR).
      */
     private final ApiStatus status;
 
     /**
-     * HTTP 상태 코드 (예: 400, 500 등)
+     * The HTTP status code (e.g., 400, 500).
      */
     private final int statusCode;
 
     /**
-     * 비즈니스 로직에 따른 에러 코드 (예: COMMON-001)
+     * A domain-specific error code (e.g., COMMON-001).
      */
     private final String errorCode;
 
     /**
-     * 사용자에게 전달할 에러 메시지
+     * A human-readable error message for the client.
      */
     private final String message;
 
     /**
-     * ErrorResponse 객체를 직접 생성하지 않고, of() 또는 toResponseEntity()를 사용할 것을 권장합니다.
+     * Private constructor to enforce the use of factory methods.
      */
     private ErrorResponse(ApiStatus status, HttpStatus httpStatus, String errorCode, String message) {
         this.status = status;
@@ -58,11 +69,11 @@ public class ErrorResponse {
     }
 
     /**
-     * 커스텀 메시지를 포함한 에러 응답 객체를 생성합니다.
+     * Creates an {@link ErrorResponse} with a custom message.
      *
-     * @param errorCode     에러 코드 객체
-     * @param customMessage 사용자 정의 에러 메시지
-     * @return ErrorResponse 객체
+     * @param errorCode     the {@link ErrorCode} instance
+     * @param customMessage a custom error message
+     * @return a new {@link ErrorResponse}
      */
     public static ErrorResponse of(ErrorCode errorCode, String customMessage) {
         return new ErrorResponse(
@@ -74,35 +85,35 @@ public class ErrorResponse {
     }
 
     /**
-     * 기본 메시지를 포함한 에러 응답 객체를 생성합니다.
+     * Creates an {@link ErrorResponse} using the default message from the error code.
      *
-     * @param errorCode 에러 코드 객체
-     * @return ErrorResponse 객체
+     * @param errorCode the {@link ErrorCode} instance
+     * @return a new {@link ErrorResponse}
      */
     public static ErrorResponse of(ErrorCode errorCode) {
         return of(errorCode, errorCode.getMessage());
     }
 
     /**
-     * 기본 메시지를 포함한 {@link ResponseEntity} 객체를 생성합니다.
+     * Wraps an {@link ErrorResponse} in a {@link ResponseEntity} using the default message.
      *
-     * @param errorCode 에러 코드 객체
-     * @return 에러 응답 본문을 포함한 ResponseEntity 객체
+     * @param errorCode the {@link ErrorCode} instance
+     * @return a {@link ResponseEntity} containing the error response
      */
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponse> toErrorResponseEntity(ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(of(errorCode));
     }
 
     /**
-     * 커스텀 메시지를 포함한 {@link ResponseEntity} 객체를 생성합니다.
+     * Wraps an {@link ErrorResponse} in a {@link ResponseEntity} with a custom message.
      *
-     * @param errorCode     에러 코드 객체
-     * @param customMessage 사용자 정의 에러 메시지
-     * @return 에러 응답 본문을 포함한 ResponseEntity 객체
+     * @param errorCode     the {@link ErrorCode} instance
+     * @param customMessage a custom error message
+     * @return a {@link ResponseEntity} containing the error response
      */
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode, String customMessage) {
+    public static ResponseEntity<ErrorResponse> toErrorResponseEntity(ErrorCode errorCode, String customMessage) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(of(errorCode, customMessage));
@@ -125,13 +136,12 @@ public class ErrorResponse {
     }
 
     /**
-     * HTTP 상태 코드에 따라 {@link ApiStatus}를 결정합니다.
+     * Resolves the {@link ApiStatus} based on the given HTTP status.
      *
-     * @param httpStatus HTTP 상태 코드
-     * @return {@code 5xx}이면 ERROR, 그 외는 FAILURE
+     * @param httpStatus the HTTP status code
+     * @return {@code ERROR} if status is 5xx, otherwise {@code FAILURE}
      */
     private static ApiStatus resolveStatus(HttpStatus httpStatus) {
         return httpStatus.is5xxServerError() ? ApiStatus.ERROR : ApiStatus.FAILURE;
     }
-
 }

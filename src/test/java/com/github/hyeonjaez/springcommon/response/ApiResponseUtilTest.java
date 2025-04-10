@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ApiResponseEntityBuilderTest {
+class ApiResponseUtilTest {
 
     @Test
     @DisplayName("ok(String message, T data) : 200 OK 응답에 ApiStatus.SUCCESS, 전달된 메시지와 데이터가 포함되어야 한다.")
@@ -19,7 +19,7 @@ class ApiResponseEntityBuilderTest {
         String expectedMessage = "테스트 메시지";
         String expectedData = "테스트 데이터";
 
-        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseEntityBuilder.ok(expectedMessage, expectedData);
+        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseUtil.ok(expectedMessage, expectedData);
 
         assertEquals(HttpStatus.OK, resultResponse.getStatusCode());
         assertNotNull(resultResponse.getBody());
@@ -34,12 +34,12 @@ class ApiResponseEntityBuilderTest {
     void testOkWithDefaultMessageAndCustomData() {
         String expectedData = "테스트 데이터";
 
-        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseEntityBuilder.ok(expectedData);
+        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseUtil.ok(expectedData);
 
         assertEquals(HttpStatus.OK, resultResponse.getStatusCode());
         assertNotNull(resultResponse.getBody());
         assertEquals(ApiStatus.SUCCESS, resultResponse.getBody().getStatus());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_OK_MESSAGE, resultResponse.getBody().getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_OK_MESSAGE, resultResponse.getBody().getMessage());
         assertNotNull(resultResponse.getBody().getData());
         assertEquals(expectedData, resultResponse.getBody().getData());
     }
@@ -50,7 +50,7 @@ class ApiResponseEntityBuilderTest {
         String expectedMessage = "테스트 메시지";
         String expectedData = "테스트 데이터";
 
-        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseEntityBuilder.created(expectedMessage, expectedData);
+        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseUtil.created(expectedMessage, expectedData);
 
         assertEquals(HttpStatus.CREATED, resultResponse.getStatusCode());
         assertNotNull(resultResponse.getBody());
@@ -65,12 +65,12 @@ class ApiResponseEntityBuilderTest {
     void testCreatedWithDefaultMessageAndCustomData() {
         String expectedData = "테스트 데이터";
 
-        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseEntityBuilder.created(expectedData);
+        ResponseEntity<ApiResponse<String>> resultResponse = ApiResponseUtil.created(expectedData);
 
         assertEquals(HttpStatus.CREATED, resultResponse.getStatusCode());
         assertNotNull(resultResponse.getBody());
         assertEquals(ApiStatus.SUCCESS, resultResponse.getBody().getStatus());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_CREATED_MESSAGE, resultResponse.getBody().getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_CREATED_MESSAGE, resultResponse.getBody().getMessage());
         assertNotNull(resultResponse.getBody().getData());
         assertEquals(expectedData, resultResponse.getBody().getData());
     }
@@ -81,7 +81,7 @@ class ApiResponseEntityBuilderTest {
         String expectedMessage = "테스트 메시지";
         EmptyResponse expected = EmptyResponse.getInstance();
 
-        ResponseEntity<ApiResponse<EmptyResponse>> responseEntity = ApiResponseEntityBuilder.noContent(expectedMessage);
+        ResponseEntity<ApiResponse<EmptyResponse>> responseEntity = ApiResponseUtil.noContent(expectedMessage);
 
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
@@ -95,12 +95,12 @@ class ApiResponseEntityBuilderTest {
     void testNoContentWithDefaultMessage() {
         EmptyResponse expected = EmptyResponse.getInstance();
 
-        ResponseEntity<ApiResponse<EmptyResponse>> responseEntity = ApiResponseEntityBuilder.noContent();
+        ResponseEntity<ApiResponse<EmptyResponse>> responseEntity = ApiResponseUtil.noContent();
 
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         assertEquals(ApiStatus.SUCCESS, responseEntity.getBody().getStatus());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_NO_CONTENT_MESSAGE, responseEntity.getBody().getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_NO_CONTENT_MESSAGE, responseEntity.getBody().getMessage());
         assertEquals(expected, responseEntity.getBody().getData());
     }
 
@@ -110,7 +110,7 @@ class ApiResponseEntityBuilderTest {
         String message = "메시지";
         String data = "데이터";
 
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, HttpStatus.OK, message, data);
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, HttpStatus.OK, message, data);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -122,7 +122,7 @@ class ApiResponseEntityBuilderTest {
     @Test
     @DisplayName("build() : 파라미터 enum status 가 null 일 경우 기본값 SUCCESS 가 적용된다")
     void build_withNullStatus() {
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(null, HttpStatus.CREATED, "메시지", "데이터");
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(null, HttpStatus.CREATED, "메시지", "데이터");
 
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -134,7 +134,7 @@ class ApiResponseEntityBuilderTest {
     void build_withNullHttpStatus() {
         String message = "메시지";
         String data = "데이터";
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, null, message, data);
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, null, message, data);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -146,44 +146,44 @@ class ApiResponseEntityBuilderTest {
     @Test
     @DisplayName("build() : 파라미터 message 가 null 일 경우 HttpStatus 상태에 따라 기본 메시지가 적용된다 - ok")
     void build_withNullMessage_whenHttpStatus_isOK() {
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, HttpStatus.OK, null, "데이터");
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, HttpStatus.OK, null, "데이터");
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_OK_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_OK_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
     }
 
     @Test
     @DisplayName("build() : 파라미터 message 가 null 일 경우 HttpStatus 상태에 따라 기본 메시지가 적용된다 - created")
     void build_withNullMessage_whenHttpStatus_isCreated() {
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, HttpStatus.CREATED, null, "데이터");
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, HttpStatus.CREATED, null, "데이터");
 
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_CREATED_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_CREATED_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
     }
 
     @Test
     @DisplayName("build() : 파라미터 message 가 null 일 경우 HttpStatus 상태에 따라 기본 메시지가 적용된다 - no content")
     void build_withNullMessage_whenHttpStatus_isNO_Content() {
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, HttpStatus.NO_CONTENT, null, "데이터");
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, HttpStatus.NO_CONTENT, null, "데이터");
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_NO_CONTENT_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_NO_CONTENT_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
     }
 
     @Test
     @DisplayName("build() : 파라미터 message 가 null 일 경우 HttpStatus 상태에 따라 기본 메시지가 적용된다 - no content")
     void build_withNullMessage_whenHttpStatus_otherStatus() {
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, HttpStatus.ACCEPTED, null, "데이터");
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, HttpStatus.ACCEPTED, null, "데이터");
 
         assertEquals(HttpStatus.ACCEPTED, result.getStatusCode());
-        assertEquals(ApiResponseEntityBuilder.DEFAULT_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
+        assertEquals(ApiResponseUtil.DEFAULT_MESSAGE, Objects.requireNonNull(result.getBody()).getMessage());
     }
 
 
     @Test
     @DisplayName("build() : 파라미터 data 가 null 일 경우 EmptyResponse 인스턴스가 사용된다")
     void build_withNullData() {
-        ResponseEntity<ApiResponse<EmptyResponse>> result = ApiResponseEntityBuilder.build(ApiStatus.SUCCESS, HttpStatus.OK, "메시지", null);
+        ResponseEntity<ApiResponse<EmptyResponse>> result = ApiResponseUtil.build(ApiStatus.SUCCESS, HttpStatus.OK, "메시지", null);
 
         assertNotNull(result.getBody());
         assertNotNull(result.getBody().getData());
@@ -197,7 +197,7 @@ class ApiResponseEntityBuilderTest {
         String message = "테스트 메시지";
         String data = "테스트 데이터";
 
-        ResponseEntity<ApiResponse<String>> result = ApiResponseEntityBuilder.build(HttpStatus.CREATED, message, data);
+        ResponseEntity<ApiResponse<String>> result = ApiResponseUtil.build(HttpStatus.CREATED, message, data);
 
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
         assertEquals(ApiStatus.SUCCESS, Objects.requireNonNull(result.getBody()).getStatus());
@@ -208,7 +208,7 @@ class ApiResponseEntityBuilderTest {
     @Test
     @DisplayName("유틸리티 클래스는 인스턴스화 할 수 없어야 한다")
     void testPrivateConstructor() throws Exception {
-        Constructor<ApiResponseEntityBuilder> constructor = ApiResponseEntityBuilder.class.getDeclaredConstructor();
+        Constructor<ApiResponseUtil> constructor = ApiResponseUtil.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         InvocationTargetException exception = assertThrows(
@@ -219,7 +219,7 @@ class ApiResponseEntityBuilderTest {
         Throwable exceptionCause = exception.getCause();
         assertNotNull(exceptionCause);
         assertInstanceOf(UnsupportedOperationException.class, exceptionCause);
-        assertEquals("Utility Class", exceptionCause.getMessage());
+        assertEquals("Utility class cannot be instantiated.", exceptionCause.getMessage());
     }
 
 }
