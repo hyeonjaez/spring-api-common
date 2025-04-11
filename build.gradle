@@ -1,14 +1,29 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id "com.vanniktech.maven.publish" version "0.29.0"
 }
 
-group = 'com.github.hyeonjaez'
-version = '1.0.0'
 
-java{
+group = 'com.github.hyeonjaez'
+version = '0.0.1'
+
+java {
     withSourcesJar()
     withJavadocJar()
+}
+
+jar{
+    enabled=true
+    archiveClassifier = ''
+    finalizedBy shadowJar  // shadowJar Task 실행
+}
+
+shadowJar {
+    archiveBaseName.set('spring-api-common')
+    archiveVersion.set('0.0.1')
+    mergeServiceFiles()
 }
 
 repositories {
@@ -33,19 +48,41 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId = 'com.github.hyeonjaez'
-            artifactId = 'spring-api-common'
-            version = '1.0.0'
-        }
-    }
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+    }
+}
+
+import com.vanniktech.maven.publish.SonatypeHost
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    coordinates("io.github.hyeonjaez", "spring-api-common", "0.0.1")
+    signAllPublications()
+    pom {
+        name = "spring-api-common"
+        url = "https://github.com/hyeonjaez/spring-api-common"
+
+        licenses {
+            license {
+                name = "MIT License"
+                url =  "https://github.com/hyeonjaez/spring-api-common/blob/main/LICENSE"
+            }
+        }
+
+        developers {
+            developer {
+                id = "hyeonjaez"
+                name = "fiat_lux"
+                email = "jhjh0022@naver.com"
+            }
+        }
+
+        scm{
+            connection ="scm:git:github.com/hyeonjaez/spring-api-common"
+            developerConnection = "scm:git:ssh://github.com:hyeonjaez/spring-api-common.git"
+            url = "https://github.com/hyeonjaez/spring-api-common/tree/main"
+        }
+
     }
 }
