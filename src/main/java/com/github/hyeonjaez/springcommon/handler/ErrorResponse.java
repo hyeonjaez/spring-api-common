@@ -119,18 +119,38 @@ public class ErrorResponse {
                 .body(of(errorCode, customMessage));
     }
 
+    /**
+     * Returns the API status (e.g., FAILURE, ERROR).
+     *
+     * @return the API status
+     */
     public ApiStatus getStatus() {
         return status;
     }
 
+    /**
+     * Returns the HTTP status code (e.g., 400, 500).
+     *
+     * @return the HTTP status code
+     */
     public int getStatusCode() {
         return statusCode;
     }
 
+    /**
+     * Returns the application-specific error code (e.g., COMMON-001).
+     *
+     * @return the error code
+     */
     public String getErrorCode() {
         return errorCode;
     }
 
+    /**
+     * Returns the error message intended for the client.
+     *
+     * @return the error message
+     */
     public String getMessage() {
         return message;
     }

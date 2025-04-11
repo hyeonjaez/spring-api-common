@@ -12,21 +12,19 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * Abstract base class that provides default global exception handling.
- *
  * <p>
  * Use this class in combination with {@code @RestControllerAdvice} to handle
  * common exceptions consistently across your Spring application.
  * </p>
  *
- * <p>
- * The following exception types are handled by default:
+ * <p>The following exception types are handled by default:</p>
  * <ul>
  *     <li>{@link NoResourceFoundException} - when the requested endpoint does not exist</li>
  *     <li>{@link HttpRequestMethodNotSupportedException} - when the HTTP method is not allowed</li>
- *     <li>{@link MethodArgumentNotValidException}, {@link ConstraintViolationException}, {@link HttpMessageNotReadableException} - for validation failures</li>
+ *     <li>{@link MethodArgumentNotValidException}, {@link ConstraintViolationException},
+ *         {@link HttpMessageNotReadableException} - for validation failures</li>
  *     <li>{@link Exception} - for unexpected internal server errors</li>
  * </ul>
- * </p>
  *
  * <p>
  * Extend this class and annotate your subclass with {@code @RestControllerAdvice}

@@ -41,6 +41,11 @@ public final class EmptyResponse {
         return EmptyResponseInstanceHolder.INSTANCE;
     }
 
+    /**
+     * Returns a fixed message indicating that no data is available.
+     *
+     * @return a default message string "No content"
+     */
     public String getResult() {
         return NO_CONTENT_RESULT;
     }

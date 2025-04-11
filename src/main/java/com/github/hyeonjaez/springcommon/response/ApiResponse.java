@@ -60,18 +60,39 @@ public class ApiResponse<T> {
         this.data = builder.data;
     }
 
+    /**
+     * Returns a new builder for {@link ApiResponse}.
+     *
+     * @param <T> the type of the response data
+     * @return a builder instance
+     */
     public static <T> Builder<T> builder() {
         return new Builder<>();
     }
 
+    /**
+     * Returns the API status.
+     *
+     * @return the status of the response
+     */
     public ApiStatus getStatus() {
         return status;
     }
 
+    /**
+     * Returns the message describing the response.
+     *
+     * @return a human-readable message
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Returns the actual data payload of the response.
+     *
+     * @return the response data
+     */
     public T getData() {
         return data;
     }

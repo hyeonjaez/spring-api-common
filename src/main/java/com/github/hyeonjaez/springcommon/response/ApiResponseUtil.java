@@ -6,20 +6,16 @@ import org.springframework.http.ResponseEntity;
 
 /**
  * Utility class for creating {@link ApiResponse} objects in a standardized and simplified way.
- *
  * <p>
  * This class helps construct consistent API responses by wrapping them in a {@link ResponseEntity}
  * along with appropriate HTTP status codes and user-friendly messages.
- * </p>
  *
- * <p>
- * It provides static helper methods for common response patterns such as:
+ * <p>It provides static helper methods for common response patterns such as:</p>
  * <ul>
  *     <li>{@code 200 OK}</li>
  *     <li>{@code 201 Created}</li>
  *     <li>{@code 204 No Content}</li>
  * </ul>
- * </p>
  *
  * <pre>{@code
  * return ApiResponseUtil.ok("User retrieved successfully", userDto);
@@ -121,15 +117,14 @@ public class ApiResponseUtil {
 
     /**
      * Builds a response with the provided status, HTTP code, message, and data.
-     *
-     * <p>Defaults are applied for any {@code null} input:
+     * <p>
+     * Defaults are applied for any {@code null} input:
      * <ul>
      *     <li>{@code status} defaults to {@link ApiStatus#SUCCESS}</li>
      *     <li>{@code httpStatus} defaults to {@link HttpStatus#OK}</li>
      *     <li>{@code message} defaults to a standard message based on the HTTP status</li>
      *     <li>{@code data} defaults to an {@link EmptyResponse} instance</li>
      * </ul>
-     * </p>
      *
      * @param status     API status
      * @param httpStatus HTTP status code

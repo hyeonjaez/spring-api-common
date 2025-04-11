@@ -20,12 +20,25 @@ package com.github.hyeonjaez.springcommon.exception;
  * @since 0.0.1
  */
 public class BusinessException extends RuntimeException {
+    /**
+     * The error code representing the business rule violation.
+     */
     private final ErrorCode errorCode;
 
+    /**
+     * Constructs a new {@code BusinessException} with the specified {@code ErrorCode}.
+     *
+     * @param errorCode the error code associated with this business exception
+     */
     public BusinessException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
+    /**
+     * Returns the {@link ErrorCode} associated with this exception.
+     *
+     * @return the error code that describes the business error
+     */
     public ErrorCode getErrorCode() {
         return errorCode;
     }
