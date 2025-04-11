@@ -48,3 +48,5 @@ out/
 gradlew
 gradlew.bat
 gradle/**
+
+gradle.properties
