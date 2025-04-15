@@ -33,7 +33,7 @@ This library was built based on the following principles:
 
 ```groovy
 dependencies {
-    implementation 'io.github.hyeonjaez:spring-api-common:0.0.1'
+    implementation group: 'io.github.hyeonjaez', name: 'spring-api-common', version: '0.0.1'
 }
 ```
 </details>
@@ -43,9 +43,9 @@ dependencies {
 
 ```xml
 <dependency>
-  <groupId>com.github.hyeonjaez</groupId>
-  <artifactId>spring-api-common</artifactId>
-  <version>0.0.1</version>
+    <groupId>io.github.hyeonjaez</groupId>
+    <artifactId>spring-api-common</artifactId>
+    <version>0.0.1</version>
 </dependency>
 ```
 </details>
