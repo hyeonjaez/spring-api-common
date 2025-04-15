@@ -1,93 +1,113 @@
-# 🌐 Spring API Common Library
+# 🌱 spring-api-common
 
-Spring Boot 프로젝트에서 API 응답 및 예외 처리를 일관성 있게 관리할 수 있도록 도와주는 공통 라이브러리입니다.
-
-> ✅ 개발자가 API 응답 포맷, 예외 처리 구조, null 검증 로직 등에서 발생할 수 있는 반복 작업을 최소화하고, 표준화된 개발 문화를 확산시키는 것을 목표로 합니다.
-
----
-## 📦 Features
-
-### ✅ 표준 API 응답 구조
-- `ApiResponse<T>`: 모든 응답을 감싸는 공통 객체
-- `ApiStatus`: SUCCESS / FAILURE / ERROR 응답 상태
-- `EmptyResponse`: 응답 데이터가 없을 때 사용
-
-### ✅ 편리한 응답 생성 유틸리티
-- `ApiResponseUtil`: `ok()`, `created()`, `noContent()` 등 ResponseEntity 래핑 도우미
-
-### ✅ 전역 예외 처리
-- `GlobalExceptionHandler`: `BusinessException` 공통 처리
-- `AbstractGlobalExceptionHandler`: 400, 404, 405, 500 기본 처리 핸들러 제공
-- `@RestControllerAdvice`로 한 줄 설정
-
-### ✅ 커스텀 예외 구조
-- `ErrorCode` 인터페이스
-- `CommonErrorCode` enum 구현
-- `BusinessException` 예외
-
-### ✅ 유틸리티
-- `ObjectsUtil`: null 체크, ID 유효성 검사 지원
+**A lightweight, opinionated Spring-based library for standardized API responses and exception handling.**  
+This library is designed with a focus on **minimal dependencies**, **clean error handling**, and **null-free responses** through the use of an `EmptyResponse` object.
 
 ---
 
-## 📁 패키지 구조
+## 🎯 Philosophy
 
+This library was built based on the following principles:
+
+- **🚫 Null-Free Design**  
+  API responses should never return `null`. Instead, a singleton `EmptyResponse` object ensures empty payloads are always predictable.
+
+- **🔗 Minimal Dependencies**  
+  No third-party dependencies beyond Spring Web and Jakarta Validation — lightweight and integration-friendly.
+
+- **📐 Consistent Structure**  
+  All success and error responses follow a unified format (`ApiResponse<T>`, `ErrorResponse`), making it easier to parse and document.
+
+- **🧰 Developer-Centric Utilities**  
+  Includes utilities like `ApiResponseUtil`, `ObjectsUtil`, and fluent builders to reduce boilerplate code.
+
+- **🧩 Easy to Customize**  
+  Extend `GlobalExceptionHandler` or `AbstractGlobalExceptionHandler` and plug it into your project via `@RestControllerAdvice`.
+
+---
+
+## 📦 Installation
+
+<details>
+<summary>Gradle</summary>
+
+```groovy
+dependencies {
+    implementation 'io.github.hyeonjaez:spring-api-common:0.0.1'
+}
 ```
-com.github.hyeonjaez.springcommon
-│
-├── exception         # 예외 코드, 비즈니스 예외 정의
-│   ├── BusinessException.java
-│   ├── ErrorCode.java
-│   └── CommonErrorCode.java
-│
-├── handler           # 전역 예외 핸들러 및 에러 응답 구조
-│   ├── GlobalExceptionHandler.java
-│   ├── AbstractGlobalExceptionHandler.java
-│   └── ErrorResponse.java
-│
-├── response          # API 응답 관련 클래스
-│   ├── ApiResponse.java
-│   ├── ApiResponseUtil.java
-│   ├── ApiStatus.java
-│   └── EmptyResponse.java
-│
-└── util              # 공통 유틸리티
-    └── ObjectsUtil.java
-```
+</details>
 
----
-
-## 🔧 설치 방법
-
-### 1. Maven 설정
+<details>
+<summary>Maven</summary>
 
 ```xml
 <dependency>
   <groupId>com.github.hyeonjaez</groupId>
   <artifactId>spring-api-common</artifactId>
-  <version>1.0.0</version>
+  <version>0.0.1</version>
 </dependency>
 ```
+</details>
 
-> ※ 실제 등록 전이라면 로컬 설치:
+> ※ If not published yet, use local install:
 ```bash
 ./gradlew publishToMavenLocal
 ```
 
 ---
 
-## ⚙️ 사용법
+## ✅ Features
 
-### 1. 예외 처리 적용
+- Unified success response wrapper (`ApiResponse<T>`)
+- Standardized error handling with `ErrorResponse`
+- Predefined error codes in `CommonErrorCode`
+- Domain-specific `BusinessException` and `ErrorCode` abstraction
+- Extendable global exception handlers
+- Singleton `EmptyResponse` for null-free design
+- `ObjectsUtil` for null/ID validation
+
+---
+
+## 📁 Package Structure
+
+```
+com.github.hyeonjaez.springcommon
+│
+├── exception         # Error codes & business exceptions
+│   ├── BusinessException.java
+│   ├── ErrorCode.java
+│   └── CommonErrorCode.java
+│
+├── handler           # Global exception handlers
+│   ├── GlobalExceptionHandler.java
+│   ├── AbstractGlobalExceptionHandler.java
+│   └── ErrorResponse.java
+│
+├── response          # API response wrappers
+│   ├── ApiResponse.java
+│   ├── ApiResponseUtil.java
+│   ├── ApiStatus.java
+│   └── EmptyResponse.java
+│
+└── util              # Validation utility
+    └── ObjectsUtil.java
+```
+
+---
+
+## ⚙️ Usage
+
+### 1. Global Exception Handler
 
 ```java
 @RestControllerAdvice
 public class MyExceptionHandler extends AbstractGlobalExceptionHandler {
-    // 필요 시 오버라이딩하여 커스터마이징 가능
+    // Override default handlers as needed
 }
 ```
 
-### 2. 응답 포맷 사용 예시
+### 2. Success Response Example
 
 ```java
 @GetMapping("/users/{id}")
@@ -97,7 +117,7 @@ public ResponseEntity<ApiResponse<UserDto>> getUser(@PathVariable Long id) {
 }
 ```
 
-### 3. 커스텀 예외 정의
+### 3. Custom ErrorCode
 
 ```java
 public enum UserErrorCode implements ErrorCode {
@@ -113,32 +133,32 @@ if (user == null) {
 
 ---
 
-## 🧪 테스트 코드
+## 🧪 Test & Compatibility
 
-- 모든 유틸리티, 응답, 예외 처리 클래스에 대해 단위 테스트 작성 완료
-- `TestController`를 통해 API 테스트 가능
-- Java 17 기준으로 테스트 통과 (Java 11 일부 지원 고려)
+- All classes are unit-tested (e.g., `ApiResponseTest`, `ErrorResponseTest`, etc.)
+- Compatible with Java 17 (partial support for Java 11)
+- Spring Boot 3.2 tested
 
 ---
 
-## 📝 확장/커스터마이징 팁
+## 📝 Extension Tips
 
-- `AbstractGlobalExceptionHandler`를 상속한 후 예외 핸들러 메서드를 추가하면 커스터마이징 가능
-- 도메인별 `ErrorCode` enum을 자유롭게 추가해 활용
-- `ObjectsUtil`은 개발 상황에 따라 `String`, `List`, `Enum` 등의 유효성 검사로 확장 가능
+- Implement `ErrorCode` per domain (e.g., `UserErrorCode`, `AuthErrorCode`)
+- Override methods in `AbstractGlobalExceptionHandler` to handle custom scenarios
+- Extend `ObjectsUtil` for validating strings, collections, enums, etc.
 
 ---
 
 ## 🛠 Tech Stack
 
-- Java 17+ (Java 11 partially supported)
-- Spring Boot 3.2
+- Java 17+
+- Spring Boot 3.2+
 - Jakarta Validation
 - JUnit 5
 
 ---
 
-## 📜 라이선스
+## 📜 License
 
 MIT License  
 Copyright (c) 2024  
@@ -146,7 +166,15 @@ Copyright (c) 2024
 
 ---
 
-## 📮 문의 및 기여
+## 🙌 Contributing
 
-이 프로젝트는 누구나 기여할 수 있습니다.  
-PR이나 이슈 환영합니다!
+Contributions are welcome!
+
+- 🐛 Found a bug?
+- 💡 Have a new idea or improvement?
+- 📄 Want to improve documentation?
+
+Feel free to open an issue or submit a pull request.  
+Let’s make Spring API development clearer and more robust — together.
+
+**Made with care by [@hyeonjaez](https://github.com/hyeonjaez)**
