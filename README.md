@@ -36,6 +36,12 @@ dependencies {
     implementation group: 'io.github.hyeonjaez', name: 'spring-api-common', version: '0.0.1'
 }
 ```
+```groovy
+dependencies {
+    implementation 'io.github.hyeonjaez:spring-api-common:0.0.1'
+}
+```
+
 </details>
 
 <details>
@@ -49,11 +55,6 @@ dependencies {
 </dependency>
 ```
 </details>
-
-> ※ If not published yet, use local install:
-```bash
-./gradlew publishToMavenLocal
-```
 
 ---
 
