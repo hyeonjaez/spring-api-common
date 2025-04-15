@@ -117,6 +117,20 @@ public ResponseEntity<ApiResponse<UserDto>> getUser(@PathVariable Long id) {
 }
 ```
 
+### ✅ Sample Success Response
+
+```json
+{
+  "status": "SUCCESS",
+  "message": "User fetched successfully",
+  "data": {
+    "id": 1,
+    "name": "Jaehyun",
+    "email": "jaehyun@example.com"
+  }
+}
+```
+
 ### 3. Custom ErrorCode
 
 ```java
@@ -128,6 +142,15 @@ public enum UserErrorCode implements ErrorCode {
 ```java
 if (user == null) {
     throw new BusinessException(UserErrorCode.USER_NOT_FOUND);
+}
+```
+### ❌ Sample Error Response
+```json
+{
+  "status": "FAILURE",
+  "statusCode": 404,
+  "errorCode": "USER-001",
+  "message": "User not found"
 }
 ```
 
