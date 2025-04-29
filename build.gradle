@@ -38,6 +38,8 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-starter-validation'
     testImplementation 'org.springframework.boot:spring-boot-starter-validation'
     compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    // add Spring boot graphql dependency
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
