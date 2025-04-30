@@ -31,15 +31,32 @@ import java.util.Map;
  * responses for different types of application and server-level exceptions.
  *
  * @author hansnam1105
- * @see com.github.hyeonjaez.springcommon.handler.GlobalExceptionHandler
- * @see com.github.hyeonjaez.springcommon.handler.ErrorResponse
- * @see com.github.hyeonjaez.springcommon.exception.BusinessException
+ * @see com.github.hyeonjaez.springcommon.graphql.GraphQLExceptionResolver
  * @since 0.0.1
  */
 // AbstractGraphQLExceptionResolver.java
 public abstract class AbstractGraphQLExceptionResolver
         implements DataFetcherExceptionResolver {
 
+    /**
+     * Resolves exceptions occurring during the GraphQL data fetching process and maps them to a list of GraphQLErrors.
+     *
+     * Based on the type of the input exception, it delegates to specific methods to generate
+     * appropriate GraphQLError instances. Supported exception types include:
+     * - BusinessException
+     * - NoResourceFoundException
+     * - HttpRequestMethodNotSupportedException
+     * - MethodArgumentNotValidException
+     * - HttpMessageNotReadableException
+     * - Any other unhandled exceptions
+     *
+     * Each exception type is mapped to a corresponding GraphQL error with relevant details like
+     * error message, error type, and custom extensions containing error information.
+     *
+     * @param ex the exception thrown during data fetching
+     * @param env the GraphQL data fetching environment associated with the operation
+     * @return a Mono containing a list of GraphQLErrors representing the resolved exception
+     */
     @Override
     public Mono<List<GraphQLError>> resolveException(Throwable ex, DataFetchingEnvironment env) {
         // 1. 비즈니스 예외
