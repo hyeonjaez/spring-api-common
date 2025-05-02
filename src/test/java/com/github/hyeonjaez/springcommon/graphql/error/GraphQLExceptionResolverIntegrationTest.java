@@ -134,7 +134,7 @@ class GraphQLExceptionResolverTest {
         assertEquals(1, errors.size());
         GraphQLError error = errors.get(0);
 
-        assertTrue(error.getMessage().contains("지원하지 않는 HTTP 메서드"));
+        assertTrue(error.getMessage().contains("Unsupported HTTP method"));
         Map<String, Object> ext = error.getExtensions();
         assertEquals(ApiStatus.FAILURE, ext.get("status"));
         assertEquals(405, ext.get("statusCode"));
@@ -194,7 +194,7 @@ class GraphQLExceptionResolverTest {
         assertEquals(1, errors.size());
         GraphQLError error = errors.get(0);
 
-        assertEquals("잘못된 요청 메시지 형식입니다.", error.getMessage());
+        assertEquals("Invalid request message format.", error.getMessage());
         Map<String, Object> ext = error.getExtensions();
         assertEquals(ApiStatus.FAILURE, ext.get("status"));
         assertEquals(400, ext.get("statusCode"));

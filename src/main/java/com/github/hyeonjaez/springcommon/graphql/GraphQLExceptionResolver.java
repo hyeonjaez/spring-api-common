@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
  *
  * It allows seamless integration of exception handling into a Spring-based application without additional configuration.
  */
-// GraphQLExceptionResolver.java (구현체)
-@Component  // Spring Bean으로 등록
+@Component
 public class GraphQLExceptionResolver extends AbstractGraphQLExceptionResolver {
     /**
      * GraphQLExceptionResolver is the default bean provided to ensure functionality "out-of-the-box"

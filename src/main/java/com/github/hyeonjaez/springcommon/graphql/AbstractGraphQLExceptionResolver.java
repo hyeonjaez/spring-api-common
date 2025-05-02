@@ -34,7 +34,6 @@ import java.util.Map;
  * @see com.github.hyeonjaez.springcommon.graphql.GraphQLExceptionResolver
  * @since 0.0.2
  */
-// AbstractGraphQLExceptionResolver.java
 public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExceptionResolver {
 
     private static final String STATUS = "status";
@@ -83,8 +82,6 @@ public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExc
         return Mono.just(List.of(handleGenericException(ex, env)));
     }
 
-    // --- Handlers for each exception type ---
-
     /**
      * Handles a {@code BusinessException} and transforms it into a {@code GraphQLError}.
      *
@@ -123,7 +120,6 @@ public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExc
      * @return a {@link GraphQLError} representing the resolved exception
      */
     protected GraphQLError handleNoResourceFound(NoResourceFoundException ex, DataFetchingEnvironment env) {
-        // 예: 404 Not Found
         return GraphqlErrorBuilder.newError(env)
                 .message(ex.getMessage())
                 .errorType(ErrorType.DataFetchingException)
@@ -150,7 +146,7 @@ public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExc
      */
     protected GraphQLError handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
-                .message("지원하지 않는 HTTP 메서드입니다: " + ex.getMethod())
+                .message("Unsupported HTTP method: " + ex.getMethod())
                 .errorType(ErrorType.DataFetchingException)
                 .extensions(Map.of(
                         STATUS, ApiStatus.FAILURE,
@@ -172,7 +168,6 @@ public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExc
      * @return a {@link GraphQLError} representing the validation error with relevant details
      */
     protected GraphQLError handleValidationException(MethodArgumentNotValidException ex, DataFetchingEnvironment env) {
-        // 첫 번째 필드 오류 메시지만 예시로 사용
         var fieldError = ex.getBindingResult().getFieldErrors().get(0);
         return GraphqlErrorBuilder.newError(env)
                 .message(fieldError.getDefaultMessage())
@@ -203,7 +198,7 @@ public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExc
     @SuppressWarnings("unused")
     protected GraphQLError handleMessageNotReadable(HttpMessageNotReadableException ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
-                .message("잘못된 요청 메시지 형식입니다.")
+                .message("Invalid request message format.")
                 .errorType(ErrorType.DataFetchingException)
                 .extensions(Map.of(
                         STATUS, ApiStatus.FAILURE,
