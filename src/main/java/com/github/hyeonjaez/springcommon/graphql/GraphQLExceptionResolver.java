@@ -15,5 +15,15 @@ import org.springframework.stereotype.Component;
 // GraphQLExceptionResolver.java (구현체)
 @Component  // Spring Bean으로 등록
 public class GraphQLExceptionResolver extends AbstractGraphQLExceptionResolver {
-    // No specific implementation - using default behavior
-}
+    /**
+     * GraphQLExceptionResolver is the default bean provided to ensure functionality "out-of-the-box"
+     * when this library is added.
+     *
+     * It is not strictly required; if a user registers their own custom {@code CustomGraphQLExceptionResolver}
+     * bean, that custom implementation will be used instead without any issues.
+     *
+     * However, if *no* such bean is registered by the user at all, the exception handling logic
+     * would not be active. Therefore, this default implementation is included to guarantee
+     * that the exception handling feature is available by default, requiring no additional setup.
+     */
+    }

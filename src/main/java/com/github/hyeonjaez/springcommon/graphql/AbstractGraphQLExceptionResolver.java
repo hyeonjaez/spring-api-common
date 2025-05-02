@@ -32,14 +32,19 @@ import java.util.Map;
  *
  * @author hansnam1105
  * @see com.github.hyeonjaez.springcommon.graphql.GraphQLExceptionResolver
- * @since 0.0.1
+ * @since 0.0.2
  */
 // AbstractGraphQLExceptionResolver.java
-public abstract class AbstractGraphQLExceptionResolver
-        implements DataFetcherExceptionResolver {
+public abstract class AbstractGraphQLExceptionResolver implements DataFetcherExceptionResolver {
+
+    private static final String STATUS = "status";
+    private static final String STATUS_CODE = "statusCode";
+    private static final String ERROR_CODE = "errorCode";
 
     /**
      * Resolves exceptions occurring during the GraphQL data fetching process and maps them to a list of GraphQLErrors.
+     *
+     * Returns Mono: To comply with Spring for GraphQL's asynchronous and non-blocking interface.
      *
      * Based on the type of the input exception, it delegates to specific methods to generate
      * appropriate GraphQLError instances. Supported exception types include:
@@ -57,37 +62,41 @@ public abstract class AbstractGraphQLExceptionResolver
      * @param env the GraphQL data fetching environment associated with the operation
      * @return a Mono containing a list of GraphQLErrors representing the resolved exception
      */
+
     @Override
     public Mono<List<GraphQLError>> resolveException(Throwable ex, DataFetchingEnvironment env) {
-        // 1. 비즈니스 예외
         if (ex instanceof BusinessException) {
             return Mono.just(List.of(handleBusinessException((BusinessException) ex, env)));
         }
-        // 2. 리소스 미발견
         if (ex instanceof NoResourceFoundException noResourceFoundException) {
             return Mono.just(List.of(handleNoResourceFound(noResourceFoundException, env)));
         }
-        // 3. HTTP 메서드 지원 안 함
         if (ex instanceof HttpRequestMethodNotSupportedException httpRequestMethodNotSupportedException) {
             return Mono.just(List.of(handleMethodNotSupported(httpRequestMethodNotSupportedException, env)));
         }
-        // 4. 검증 실패
         if (ex instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
             return Mono.just(List.of(handleValidationException(methodArgumentNotValidException, env)));
         }
-        // 5. 메시지 컨버팅 실패 (JSON 파싱 오류 등)
         if (ex instanceof HttpMessageNotReadableException httpMessageNotReadableException) {
             return Mono.just(List.of(handleMessageNotReadable(httpMessageNotReadableException, env)));
         }
-        // 6. 그 외 예외 (Internal Server Error)
         return Mono.just(List.of(handleGenericException(ex, env)));
     }
 
     // --- Handlers for each exception type ---
-    private static final String STATUS = "status";
-    private static final String STATUS_CODE = "statusCode";
-    private static final String ERROR_CODE = "errorCode";
 
+    /**
+     * Handles a {@code BusinessException} and transforms it into a {@code GraphQLError}.
+     *
+     * This method retrieves the error code and associated details from the {@code BusinessException},
+     * then constructs a {@code GraphQLError} with an appropriate error message, error type, and
+     * extensions containing additional information about the error. It leverages the
+     * {@code DataFetchingEnvironment} to tie the error with the ongoing GraphQL operation context.
+     *
+     * @param ex the {@link BusinessException} to be handled
+     * @param env the {@link DataFetchingEnvironment} containing the current GraphQL operation's context
+     * @return a {@link GraphQLError} representing the resolved business exception
+     */
     protected GraphQLError handleBusinessException(BusinessException ex, DataFetchingEnvironment env) {
         var code = ex.getErrorCode();
         return GraphqlErrorBuilder.newError(env)
@@ -101,6 +110,18 @@ public abstract class AbstractGraphQLExceptionResolver
                 .build();
     }
 
+    /**
+     * Handles a {@code NoResourceFoundException} by transforming it into a {@code GraphQLError}.
+     *
+     * This method creates a {@code GraphQLError} with the message from the exception, an error type
+     * of {@code DataFetchingException}, and custom extensions containing error details such as status,
+     * status code, and error code. It utilizes the {@code DataFetchingEnvironment} to associate the
+     * error with the current GraphQL operation.
+     *
+     * @param ex the {@link NoResourceFoundException} to be handled
+     * @param env the {@link DataFetchingEnvironment} containing the context of the current GraphQL operation
+     * @return a {@link GraphQLError} representing the resolved exception
+     */
     protected GraphQLError handleNoResourceFound(NoResourceFoundException ex, DataFetchingEnvironment env) {
         // 예: 404 Not Found
         return GraphqlErrorBuilder.newError(env)
@@ -114,6 +135,19 @@ public abstract class AbstractGraphQLExceptionResolver
                 .build();
     }
 
+    /**
+     * Handles an HttpRequestMethodNotSupportedException by transforming it into a GraphQLError.
+     *
+     * This method constructs a GraphQLError with a specific message indicating the unsupported
+     * HTTP method, an error type of DataFetchingException, and additional extensions containing
+     * error details such as status, status code, and error code.
+     *
+     * @param ex the HttpRequestMethodNotSupportedException to be handled, representing
+     *           the unsupported HTTP method during the request
+     * @param env the DataFetchingEnvironment containing context information about the
+     *            current GraphQL request
+     * @return a GraphQLError representing the resolved exception with error details
+     */
     protected GraphQLError handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
                 .message("지원하지 않는 HTTP 메서드입니다: " + ex.getMethod())
@@ -126,6 +160,17 @@ public abstract class AbstractGraphQLExceptionResolver
                 .build();
     }
 
+    /**
+     * Handles a {@code MethodArgumentNotValidException} and transforms it into a {@code GraphQLError}.
+     *
+     * This method extracts the first field error from the exception's binding result to construct a
+     * {@code GraphQLError} with an error type of {@code ValidationError}. The error message and
+     * information about the invalid field are included in the extensions for providing detailed feedback.
+     *
+     * @param ex the {@link MethodArgumentNotValidException} containing validation errors
+     * @param env the {@link DataFetchingEnvironment} providing the context of the current GraphQL operation
+     * @return a {@link GraphQLError} representing the validation error with relevant details
+     */
     protected GraphQLError handleValidationException(MethodArgumentNotValidException ex, DataFetchingEnvironment env) {
         // 첫 번째 필드 오류 메시지만 예시로 사용
         var fieldError = ex.getBindingResult().getFieldErrors().get(0);
@@ -141,6 +186,20 @@ public abstract class AbstractGraphQLExceptionResolver
                 .build();
     }
 
+    /**
+     * Handles a {@code HttpMessageNotReadableException} and transforms it into a {@code GraphQLError}.
+     *
+     * This method constructs a {@code GraphQLError} with a predefined error message indicating
+     * an invalid request message format. It sets the error type as {@code DataFetchingException}
+     * and includes additional error details such as status, status code, and error code in
+     * the extensions map. The {@code DataFetchingEnvironment} is used to associate the error
+     * with the current GraphQL operation context.
+     *
+     * @param ex the {@link HttpMessageNotReadableException} that indicates a failed attempt
+     *           to read the HTTP message
+     * @param env the {@link DataFetchingEnvironment} associated with the current GraphQL operation
+     * @return a {@link GraphQLError} representing the resolved error for an unreadable HTTP message
+     */
     @SuppressWarnings("unused")
     protected GraphQLError handleMessageNotReadable(HttpMessageNotReadableException ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
@@ -154,6 +213,19 @@ public abstract class AbstractGraphQLExceptionResolver
                 .build();
     }
 
+    /**
+     * Handles a generic exception and transforms it into a {@code GraphQLError}.
+     *
+     * This method is used as a fallback for handling exceptions that do not match
+     * specific exception handlers. It creates a {@code GraphQLError} with a
+     * generalized error message, an error type of {@code DataFetchingException},
+     * and includes additional extensions containing error details such as status,
+     * status code, and error code.
+     *
+     * @param ex the throwable or exception to be handled
+     * @param env the {@link DataFetchingEnvironment} associated with the current GraphQL operation
+     * @return a {@link GraphQLError} representing the resolved generic exception
+     */
     @SuppressWarnings("unused")
     protected GraphQLError handleGenericException(Throwable ex, DataFetchingEnvironment env) {
         return GraphqlErrorBuilder.newError(env)
