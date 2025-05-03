@@ -67,6 +67,7 @@ dependencies {
 - Extendable global exception handlers
 - Singleton `EmptyResponse` for null-free design
 - `ObjectsUtil` for null/ID validation
+- `GraphQL Global Exception Handling` via a DataFetcherExceptionResolver implementation that produces consistent error payloads in errors.extensions
 
 ---
 
@@ -80,6 +81,9 @@ com.github.hyeonjaez.springcommon
 │   ├── ErrorCode.java
 │   └── CommonErrorCode.java
 │
+├── graphql           # GraphQL integration
+│   ├── AbstractGraphQLExceptionResolver.java
+│   └── GraphQLExceptionResolver.java
 ├── handler           # Global exception handlers
 │   ├── GlobalExceptionHandler.java
 │   ├── AbstractGlobalExceptionHandler.java
@@ -154,6 +158,40 @@ if (user == null) {
   "message": "User not found"
 }
 ```
+### 4. GraphQL Global Exception Handling
+Any BusinessException or common framework exception thrown in a `@QueryMapping` or `@MutationMapping` will be converted into a GraphQL error with standardized extensions.
+
+### Example Resolver:
+```java
+@QueryMapping
+public UserDto getUserById(@Argument Long id) {
+    UserDto user = userService.findById(id);
+    if (user == null) {
+        throw new BusinessException(UserErrorCode.USER_NOT_FOUND);
+    }
+    return user;
+}
+```
+
+### ❌ Sample Error Response
+```json
+{
+  "errors": [
+    {
+      "message": "User not found",
+      "extensions": {
+        "status": "FAILURE",
+        "statusCode": 404,
+        "errorCode": "USER-001"
+      }
+    }
+  ],
+  "data": {
+    "getUserById": null
+  }
+}
+```
+Errors are always returned with HTTP 200, and clients should inspect errors[*].extensions.errorCode or statusCode to handle failures.
 
 ---
 
@@ -162,6 +200,7 @@ if (user == null) {
 - All classes are unit-tested (e.g., `ApiResponseTest`, `ErrorResponseTest`, etc.)
 - Compatible with Java 17 (partial support for Java 11)
 - Spring Boot 3.2 tested
+- Tested with Spring for GraphQL 1.1+
 
 ---
 
@@ -179,6 +218,7 @@ if (user == null) {
 - Spring Boot 3.2+
 - Jakarta Validation
 - JUnit 5
+- Spring for GraphQL 1.1+
 
 ---
 
