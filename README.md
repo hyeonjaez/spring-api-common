@@ -238,7 +238,37 @@ Contributions are welcome!
 - 💡 Have a new idea or improvement?
 - 📄 Want to improve documentation?
 
-Feel free to open an issue or submit a pull request.  
-Let’s make Spring API development clearer and more robust — together.
+---
+
+## 👥 Contributors
+
+Thanks to the following people who have contributed to this project 💖
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/hyeonjaez">
+        <img src="https://avatars.githubusercontent.com/hyeonjaez" width="80px;" alt="hyeonjaez"/>
+        <br />
+        <sub><b>Fiat_lux</b></sub>
+      </a>
+      <br />
+      <sup>Creator & Maintainer</sup>
+    </td>
+    <td align="center">
+      <a href="https://github.com/hansnam1105">
+        <img src="https://avatars.githubusercontent.com/hansnam1105" width="80px;" alt="username1"/>
+        <br />
+        <sub><b>Seungnam Han</b></sub>
+      </a>
+      <br />
+      <sup>Contributor</sup>
+    </td>
+    <!-- Add more contributors below in the same format -->
+  </tr>
+</table>
+
+Want to contribute? Feel free to submit a pull request or open an issue!  
+Let’s build something great together. 🚀
 
 **Made with care by [@hyeonjaez](https://github.com/hyeonjaez)**
